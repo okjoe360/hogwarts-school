@@ -10,3 +10,6 @@ Clone the repository: For this step you need Git installed, but you can just dow
 Navigate to the project directory: (Type this into your CMD window, you're aiming to navigate the CMD window to the repository you just downloaded)
 pipenv shell
 Install the required dependencies: (Again, type this into your CMD window) : pip install -r requirements.txt
+
+Username = admin
+password = admin123
