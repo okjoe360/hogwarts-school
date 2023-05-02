@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block base %}
+<div>
+    <div class="pos-fixed pos-center p-3">
+        <div class="text-center mb-5">
+            <img src="{% static 'images/logo.png' %}" width="200px">
+        </div>
+        <form method="post" class="from-group">
+            {% csrf_token %}
+
+            {{form}}
+
+            <div class="form-group mt-3">
+                <button type="submit" class="button primary shadowed">Login</button>
+            </div>	
+        </form>
+    </div>
+</div>
+<script>
+    document.getElementById('id_username').setAttribute("data-prepend", "<span class='mif-user'></span>");
+    document.getElementById('id_password').setAttribute("data-prepend", "<span class='mif-lock'></span>");
+    var labl = document.getElementsByTagName('label')
+    for(x=0;x<labl.length;x++){
+        labl[x].classList.add('mt-3');
+    }
+</script>
+     
+{% endblock %}

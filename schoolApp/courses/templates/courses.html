@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block base %}
+
+<div class="h-100 p-4">
+
+    
+
+    <p class="h3">Courses at Hogwarts College</p>
+
+    <button type="button" class="button mb-3" style="background-color: #116466;color:white;" onclick="Metro.dialog.open('#main_dialog')"><span class="mif-plus"></span> &nbsp;&nbsp;&nbsp; Add Course</button>
+
+    <div class="table__wrapper">
+        <table class="table" data-role="table">
+            <thead>
+                <tr>
+                    <th>Class Name</th>
+                    <th>Class Type</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td>{{ course.name }}</td>
+                    <td>{{ course.type }}</td>
+                    <td>{{ course.date_created }}</td>
+                    <td>
+                        <span class="mif-news mif-1x fg-primary" onclick="viewCourse('{{course.id|safe}}')"></span>
+                        <span class="mif-pencil mif-1x fg-secondary" onclick="updateCourse('{{course.id|safe}}', '{{course.name|safe}}', '{{course.type|safe}}')"></span>
+                        <a href="/manage-course/{{ course.id }}/"><span class="mif-bin mif-1x fg-red mx-2" onclick="return confirm('Are you sure you want to Delete this Entry?')"></span></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
+<!-- MODAL STARTS -->
+<div class="dialog" data-role="dialog" id="main_dialog">
+    <div class="dialog-title">Add New Course</div>
+
+    <div class="dialog-content">
+        <form method="post" action="">
+            {{ form.management_data }}
+            {% csrf_token %}
+
+            {% for f in form %}
+            <div class="form-group mt-3">
+                <label>{{ f.label }}</label>
+                {{ f }}
+                {{ f.error }}
+            </div>
+            {% endfor %}
+
+            <input type="hidden" name="pk" id="pk" />
+
+            <div class="form-group mt-3">
+                <button type="submit" class="button" style="background-color: #116466;color:white;" id="submit_btn">Submit</button>
+                <button type="button" class="button dark js-dialog-close" id="cancel_btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="dialog-actions">
+        <button class="button js-dialog-close hidden__ele"></button>
+    </div>
+</div>
+<!-- MODALS ENDS -->
+{% endblock %}
+
+
+
+{% block script %}
+<script>
+
+    function viewCourse(id){
+        //document.getElementById('dialog-content').innerHTML = '';
+        
+        fetch(`/view-course/${id}`)
+        .then(res => {
+            if (!res.ok){
+                throw Error("Network Error")
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data.status === "success"){
+                var row = '';
+                if (data.teachers.length > 0){
+                        row += '<div class="mb-3"><h3 style="color: #116466;">Professors</h3><ol>';
+                        for(a=0;a<data.teachers.length;a++){
+                            row += `<li>${data.teachers[a]}</li>`
+                        }
+                        row += '</ol></div>';
+                    }else{
+                        row += '<h5 class="mb-3" style="color: #116466;">No Professor registered to this course</h5>'
+                    }
+
+                if (data.students.length > 0){
+                        row += '<div><h3 style="color: #116466;">Students</h3><ol>';
+                        for(b=0;b<data.students.length;b++){
+                            row += `<li>${data.students[b]}</li>`;
+                        }
+                        row += '</ol></div>';
+                    }else{
+                        row += '<h5 style="color: #116466;">No Student is registered for this course</h5>';
+                    }
+                    Metro.dialog.create({
+                        title: `<h3 class="text-center" style="color: #116466;">${data.course.name.toUpperCase()}</h3>`,
+                        content: row,
+                        closeButton: true
+                    });
+        }
+    })
+    }
+
+    function updateCourse(id, name, type){
+        console.log(id);
+        console.log(name);
+        console.log(type);
+        var main_dialog = document.getElementById('main_dialog');
+        main_dialog.getElementsByClassName('dialog-title')[0].innerText = 'Update Course';
+        document.getElementById("submit_btn").innerText = 'Update';
+        document.getElementById("cancel_btn").setAttribute("onclick", "location.reload();");
+        document.getElementById("pk").value = id;
+        document.getElementById("id_name").value = name;
+        document.getElementById("id_type").removeChild(document.getElementById("id_type").getElementsByTagName('option')[0]);
+        document.getElementById("id_type").insertAdjacentHTML('afterbegin', `<option value="${type}" selected>${type}</option>`);
+        document.forms[0].setAttribute("action", "/manage-course/");
+        Metro.dialog.open('#main_dialog')
+    }
+</script>
+{% endblock %}

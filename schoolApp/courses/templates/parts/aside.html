@@ -1,0 +1,26 @@
+{% load static %}
+
+<aside class="sidebar pos-absolute z-2"
+    data-role="sidebar"
+    data-toggle="#sidebar-toggle-3"
+    id="sb3"
+    data-shift=".shifted-content"
+    style="background-color: #116466;">
+    <div class="sidebar-header" style="background-color: #116466;">
+        
+        <div class="avatar">
+            <img src="{% static 'images/logo.png' %}" data-email="example@admin.com">
+        </div>
+
+        <span class="title fg-white">Hogwarts School of Magic</span>
+        <span class="subtitle fg-white"> 2022 © Joel</span>
+    </div>
+
+    <ul class="sidebar-menu" style="background-color: #116466;">
+        <li><a href="/" class="fg-white"><span class="mif-home icon"></span>Home</a></li>
+        <li><a href="/courses" class="fg-white"><span class="mif-books icon"></span>Courses</a></li>
+        <li><a href="/teachers" class="fg-white"><span class="mif-user-secret icon"></span>Professors</a></li>
+        <li><a href="/students" class="fg-white"><span class="mif-users icon"></span>Students</a></li>
+    </ul>
+
+</aside>

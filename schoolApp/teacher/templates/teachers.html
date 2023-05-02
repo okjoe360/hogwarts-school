@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block base %}
+
+<div class="h-100 p-4">
+
+    
+
+    <p class="h3">Professors at Hogwarts College</p>
+
+    <button type="button" class="button mb-3" style="background-color: #116466;color:white;" onclick="Metro.dialog.open('#main_dialog')"><span class="mif-plus"></span> &nbsp;&nbsp;&nbsp; Add Professor</button>
+
+    <div class="table__wrapper">
+        <table class="table" data-role="table">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Gender</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for teacher in teachers %}
+                <tr>
+                    <td>{{ teacher.first_name }}</td>
+                    <td>{{ teacher.last_name }}</td>
+                    <td>{{ teacher.gender }}</td>
+                    <td>{{ teacher.date_created }}</td>
+                    <td>
+                        <span class="mif-news mif-1x fg-primary" onclick="viewCourse('{{teacher.id|safe}}')"></span>
+                        <span class="mif-pencil mif-1x fg-secondary" onclick="updateTeacher('{{teacher.id|safe}}', '{{teacher.first_name|safe}}', '{{teacher.last_name|safe}}', '{{teacher.gender|safe}}')"></span>
+                        <a href="/teachers/manage/{{ teacher.id }}/"><span class="mif-bin mif-1x fg-red mx-2" onclick="return confirm('Are you sure you want to Delete this Entry?')"></span></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
+<!-- MODAL STARTS -->
+<div class="dialog" data-role="dialog" id="main_dialog">
+    <div class="dialog-title">Add Professor</div>
+
+    <div class="dialog-content" id="dialog-content">
+        <form method="post" action="">
+            {{ form.management_data }}
+            {% csrf_token %}
+
+            {% for f in form %}
+            <div class="form-group mt-3">
+                <label>{{ f.label }}</label>
+                {{ f }}
+                {{ f.error }}
+            </div>
+            {% endfor %}
+
+            <input type="hidden" name="pk" id="pk" />
+
+            <div class="form-group mt-3">
+                <button type="submit" class="button" style="background-color: #116466;color:white;" id="submit_btn">Submit</button>
+                <button type="button" class="button dark js-dialog-close" id="cancel_btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="dialog-actions">
+        <button class="button js-dialog-close hidden__ele"></button>
+        <!--button class="button primary js-dialog-close">Agree</button-->
+    </div>
+</div>
+<!-- MODALS ENDS -->
+{% endblock %}
+
+
+
+{% block script %}
+<script>
+    function viewCourse(id){
+        //document.getElementById('dialog-content').innerHTML = '';
+        
+        fetch(`/teachers/add-courses/${id}`)
+        .then(res => {
+            if (!res.ok){
+                throw Error("Network Error")
+            }
+            return res.text();
+        })
+        .then(data => {
+            //document.getElementById('dialog-content').innerHTML = data;
+            //Metro.dialog.open('#main_dialog');
+            Metro.dialog.create({
+                content: data,
+                closeButton: true
+            });
+    })
+    }
+
+
+    function updateTeacher(id, fname, lname, gender){
+        var main_dialog = document.getElementById('main_dialog');
+        main_dialog.getElementsByClassName('dialog-title')[0].innerText = 'Update Professor Details';
+        document.getElementById("submit_btn").innerText = 'Update';
+        document.getElementById("cancel_btn").setAttribute("onclick", "location.reload();");
+        document.getElementById("pk").value = id;
+        document.getElementById("id_first_name").value = fname;
+        document.getElementById("id_last_name").value = lname;
+        //document.getElementById("id_gender").value = gender;
+
+        document.getElementById("id_gender").removeChild(document.getElementById("id_gender").getElementsByTagName('option')[0]);
+        document.getElementById("id_gender").insertAdjacentHTML('afterbegin', `<option value="${gender}" selected>${gender}</option>`);
+
+        //document.getElementById("id_type").prepend(`<option value="$(type)">${type}</option>`);
+        //document.getElementById("id_type").value = type;
+        document.forms[0].setAttribute("action", `/teachers/manage/${id}/`);
+        Metro.dialog.open('#main_dialog')
+    }
+</script>
+{% endblock %}

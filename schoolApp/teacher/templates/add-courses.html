@@ -1,0 +1,66 @@
+{% load static %}
+
+<!--div class="dialog" data-role="dialog" id="main_dialog"-->
+<div>
+    <div class="dialog-title">Add Course to Professor {{ teacher.last_name }}</div>
+
+    <div class="dialog-content">
+        {% if teacher.teachers.all %}
+        <p>Courses</p>
+        <ol>
+            {% for t in teacher.teachers.all %}
+                <li>
+                    <span>{{ t.course }}</span>
+                    <a href="/teachers/remove-course/{{ t.id }}/" class="float-right"><span class="mif-bin mif-1x fg-red mx-2" onclick="return confirm('Are you sure you want to Delete this Entry?')"></span></a>
+
+                </li>
+            {% endfor %}
+        </ol>
+        {% endif %}
+
+        <form method="post" action="/teachers/add-courses/{{ teacher.id }}/">
+            {{ form.management_data }}
+            {% csrf_token %}
+
+                <div class="form-group mt-3">
+                    <label>Add Course</label>
+                    <select name="course" class="select" required="" id="id_course" data-role="select" data-role-select="true">
+                        <option value="" selected="">---------</option>
+                        {% for c in courses %}
+                            <option value="{{ c.id }}">{{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+            <input type="hidden" name="pk" id="pk" value="{{ teacher.id }}" />
+
+            <div class="form-group mt-3">
+                <button type="submit" class="button" style="background-color: #116466;color:white;" id="submit_btn">Submit</button>
+                <button type="button" class="button dark js-dialog-close" id="cancel_btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="dialog-actions">
+        <button class="button js-dialog-close hidden__ele"></button>
+    </div>
+</div>
+
+<script>
+    var inps = document.getElementsByTagName('input');
+    for(i=0;i<inps.length;i++){
+        if(inps[i].type !== 'hidden'){
+            inps[i].classList.add('metro-input');
+            inps[i].setAttribute("data-role", "input");
+        }
+    }
+
+    var s = document.getElementsByTagName('select');
+    for(i=0;i<s.length;i++){
+        if(s[i].type !== 'hidden'){
+            //s[i].classList.add('metro-input');
+            s[i].setAttribute("data-role", "select");
+        }
+    }
+
+</script>

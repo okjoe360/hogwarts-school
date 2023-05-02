@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Metro UI -->
+    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4.5.1/css/metro-all.min.css">
+
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+
+    {% if title %}
+        <title>{{ title }} | Hogwarts School of Magic</title>
+    {% else %}
+        <title>Hogwarts School of Magic</title>
+    {% endif %}
+
+    <style>
+        body {
+            background-color: #d1e8e2;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+
+        .table__wrapper {
+            padding: 15px;
+            overflow-x: scroll;
+            background-color: white;
+        }
+
+        .hidden__ele {
+            /*display : none;*/
+            visibility: hidden;
+        }
+    </style>
+
+    <!-- Metro UI -->
+    <script src="https://cdn.korzh.com/metroui/v4.5.1/js/metro.min.js"></script>
+  </head>
+  <body>
+
+        {% if user.is_authenticated %}{% include "parts/aside.html" %}{% endif %}
+
+        <div class="shifted-content h-100 p-ab">
+            {% if user.is_authenticated %}{% include "parts/navbar.html" %}{% endif %}
+
+            
+            <div class="container-fluid h-100" style="background-color: #d1e8e2;">
+                {% if breadcrumbs %}
+                <ul class="breadcrumbs m-1" style="background-color: #d1e8e2;">
+                    {% for b in breadcrumbs %}
+                        <li class="page-item"><a href="{{ b.link }}" class="page-link">{{ b.name }}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% block base %}{% endblock %}
+            </div>
+
+            <!-- Message -->
+            {% if messages %}
+            <div style="opacity:0;">
+                <ul>                
+                    {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                            <li class="messages_list">{{ message }} || alert</li>
+                        {% else %}
+                            <li class="messages_list">{{ message }} || {{message.tags}}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            <!-- Message -->
+
+            
+
+            <script>
+                var inps = document.getElementsByTagName('input');
+                for(i=0;i<inps.length;i++){
+                    if(inps[i].type !== 'hidden'){
+                        inps[i].classList.add('metro-input');
+                        inps[i].setAttribute("data-role", "input");
+                    }
+                }
+
+                var s = document.getElementsByTagName('select');
+                for(i=0;i<s.length;i++){
+                    if(s[i].type !== 'hidden'){
+                        //s[i].classList.add('metro-input');
+                        s[i].setAttribute("data-role", "select");
+                    }
+                }
+
+                var messages_list = document.getElementsByClassName('messages_list');
+                for(m=0;m<messages_list.length;m++){
+                    console.log(messages_list[m].innerText.split("||")[0]);
+                    console.log(messages_list[m].innerText.split('||')[1]);
+                    Metro.infobox.create(messages_list[m].innerText.split('||')[0], messages_list[m].innerText.split('||')[1]);
+                }
+
+            </script>
+
+            
+            {% block script %}{% endblock %}
+        </div>
+
+    
+  </body>
+</html>

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block base %}
+<div class="h-100 p-4">
+    <p class="h1 p-2 mb-5 fg-orange" style="font-family: bradley hand, cursive, Luminari, fantasy;">Hogwarts School of Witchcraft and Wizardry</p>
+    <div class="grid">
+        <div class="row">
+            <div class="cell-3 p-2">
+                <div>
+                    <div class="more-info-box bg-cyan fg-white">
+                        <div class="content">
+                            <h2 class="text-bold mb-0">{{ total }}</h2>
+                            <div>Total</div>
+                        </div>
+                        <div class="icon">
+                            <span class="mif-chart-bars"></span>
+                        </div>
+                        <a href="#" class="more"> More info <span class="mif-arrow-right"></span></a>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="cell-3 p-2"><div>
+                <div class="more-info-box bg-green fg-white">
+                    <div class="content">
+                        <h2 class="text-bold mb-0">{{ total_courses }}</h2>
+                        <div>Courses</div>
+                    </div>
+                    <div class="icon">
+                        <span class="mif-books icon"></span>
+                    </div>
+                    <a href="/courses" class="more"> More info <span class="mif-arrow-right"></span></a>
+                </div>
+            </div></div>
+
+            <div class="cell-3 p-2">
+                <div>
+                    <div class="more-info-box bg-orange fg-white">
+                        <div class="content">
+                            <h2 class="text-bold mb-0">{{ total_students }}</h2>
+                            <div>Students</div>
+                        </div>
+                        <div class="icon">
+                            <span class="mif-users icon"></span>
+                        </div>
+                        <a href="/students" class="more"> More info <span class="mif-arrow-right"></span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cell-3 p-2">
+                <div>
+                    <div class="more-info-box bg-teal fg-white">
+                        <div class="content">
+                            <h2 class="text-bold mb-0">{{ total_teachers }}</h2>
+                            <div>Professors</div>
+                        </div>
+                        <div class="icon">
+                            <span class="mif-user-secret icon"></span>
+                        </div>
+                        <a href="/teachers" class="more"> More info <span class="mif-arrow-right"></span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}{% endblock %}

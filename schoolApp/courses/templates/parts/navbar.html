@@ -1,0 +1,17 @@
+<div class="app-bar pos-absolute z-1 fg-white" data-role="appbar" style="background-color: #116466;">
+    <button class="app-bar-item c-pointer" id="sidebar-toggle-3">
+        <span class="mif-menu fg-white"></span>
+    </button>
+    <span>Hello, {% if user.is_authenticated %}{{ user.username|title }}{% else %}Guest{% endif %}</span>&nbsp;&nbsp; | &nbsp;&nbsp; <span id="date-time"></span>
+    <a href="/admin" class="app-bar-item ml-auto">
+        <span class="mif-user"></span>
+    </a>
+    <a href="/logout" class="button mr-5 fg-white link">
+        <sup class="text-muted">Logout</sup>
+    </a>
+</div>
+
+<script>
+    var dt = new Date();
+    document.getElementById('date-time').innerHTML=`<small>${dt}</small>`;
+</script>
